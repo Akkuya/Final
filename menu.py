@@ -2,8 +2,8 @@ import pygame
 import globals
 
 pygame.init()
-font = pygame.font.Font("Inter.ttf", 15)
-title_font = pygame.font.Font("Inter.ttf", 50)
+font = pygame.font.Font("./assets/fonts/Inter.ttf", 15)
+title_font = pygame.font.Font("./assets/fonts/Inter.ttf", 50)
 
 
 

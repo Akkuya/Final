@@ -2,12 +2,12 @@ import pygame
 import globals
 
 pygame.init()
-font = pygame.font.Font("Inter.ttf", 15)
-title_font = pygame.font.Font("Inter.ttf", 50)
-body = pygame.font.Font("Inter.ttf", 65)
+font = pygame.font.Font("./assets/fonts/Inter.ttf", 15)
+title_font = pygame.font.Font("./assets/fonts/Inter.ttf", 50)
+body = pygame.font.Font("./assets/fonts/Inter.ttf", 65)
 
 
-backbtn = pygame.image.load('./backbtn.png')
+backbtn = pygame.image.load('./assets/img/backbtn.png')
 backbtn = pygame.transform.rotozoom(backbtn, 0, 0.05)
 back_rect = backbtn.get_rect(topleft = (5, 5))
 
