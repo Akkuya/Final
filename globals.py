@@ -4,12 +4,12 @@ WINDOW_HEIGHT = 600
 
 DIFFICULTY = "EASY"
 
-spacing = 2
+spacing = 10
+width = 40
 
 score = 0
 
-grid = [
-        [[False, -1], [False, 1]],
-        [[False, 1], [False, 1]]
+mines = 20
 
-        ]
+
+grid = []

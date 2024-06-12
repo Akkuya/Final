@@ -9,8 +9,8 @@ import menu
 import options
 
 pygame.init()
-
 screen = pygame.display.set_mode((globals.WINDOW_WIDTH,globals.WINDOW_HEIGHT))
+
 clock = pygame.time.Clock()
 
 

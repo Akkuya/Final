@@ -1,5 +1,6 @@
 import pygame
 import globals
+import game
 
 pygame.init()
 font = pygame.font.Font("./assets/fonts/Inter.ttf", 15)
@@ -18,11 +19,7 @@ def keycheck():
 
             if 338<= mouse_x <= 463 and 170 <= mouse_y <= 231:
                 globals.GAME_STATUS = "GAME"
-                globals.grid = [
-                [[False, -1], [False, 1]],
-                [[False, 1], [False, 1]]
-
-                ]
+                game.init()
                 print("Play button clicked")
                 
             elif 338 <= mouse_x <= 463 and 270 <= mouse_y <= 331:
