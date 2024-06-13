@@ -7,6 +7,7 @@ import game
 import lose
 import menu
 import options
+import win
 
 pygame.init()
 screen = pygame.display.set_mode((globals.WINDOW_WIDTH,globals.WINDOW_HEIGHT))
@@ -26,3 +27,5 @@ while True:
         game.run(screen, clock)
     elif globals.GAME_STATUS == "LOSE":
         lose.run(screen, clock)
+    elif globals.GAME_STATUS == "WIN":
+        win.run(screen, clock)

@@ -6,41 +6,50 @@
 # - DFS IF USER CLICKS A TILE WITH A 0 ON IT
 
 
-
+##################### EXTERNAL MODULES ####################
 import pygame
 from math import floor
 import random
 
+#####################   OTHER FILES    ####################
 import globals as g
 
 pygame.init()
-pygame.time.set_timer(pygame.USEREVENT, 1000)
+pygame.time.set_timer(pygame.USEREVENT, 1000) # Define a tick every second
 
-font = pygame.font.Font("./assets/fonts/Inter.ttf", 15)
+
+######################      FONTS      #####################
 title_font = pygame.font.Font("./assets/fonts/Inter.ttf", 40)
-body = pygame.font.Font("./assets/fonts/Inter.ttf", 65)
 small_font = pygame.font.Font("./assets/fonts/Inter.ttf", 30)
+
+
 visited = []
+
+######################      IMAGES      #####################
+
+# Placeable Flag
 flag_img = pygame.image.load('./assets/img/flag.png')
 flag_img = pygame.transform.rotozoom(flag_img, 0, 0.1)
+# Flag Icon
 flag_icon = pygame.transform.rotozoom(flag_img, 0, 1.5)
 flag_rect = flag_icon.get_rect(center=(200, 550))
-curr_time = g.DIFF_TIMER[g.DIFFICULTY]
+# Timer Icon
 timer_img = pygame.image.load('./assets/img/timer.png')
 timer_img = pygame.transform.rotozoom(timer_img, 0, 0.15)
 timer_rect = timer_img.get_rect(center=(450, 550))
-godmode = False
-playable_area = pygame.Rect((50, 100, 700, 400))
-
+# Back Button
 backbtn = pygame.image.load('./assets/img/backbtn.png')
-
 backbtn = pygame.transform.rotozoom(backbtn, 0, 0.05)
 back_rect = backbtn.get_rect(topleft = (5, 5))
 
+# Title Text
 text_title = title_font.render(g.DIFF_NAME[g.DIFFICULTY], True, g.DIFF_COLOUR[g.DIFFICULTY])
 text_title_rect = text_title.get_rect(center=(g.WINDOW_WIDTH // 2, 50))
 
-
+######################      VARIABLES      #######################
+curr_time = g.DIFF_TIMER[g.DIFFICULTY]
+godmode = False
+playable_area = pygame.Rect((50, 100, 700, 400))
 
 def keycheck():
     global curr_time, godmode
@@ -95,10 +104,11 @@ def init():
             if mine_chance <= 18 and count < g.mines:
                 val = -1
                 count += 1
+        
             item = [False, val, False]
             row.append(item)
         g.grid.append(row)
-    
+    g.flags = count
     # I was on adderall when I wrote this i will figure out how it works later
 
     for row in range(8):
@@ -160,53 +170,56 @@ def draw(window):
            if g.grid[row][item][2]:
                flagrect = flag_img.get_rect(topleft=(60 + (item*(g.width+g.spacing)), 108 + (row*(g.width+g.spacing))))
                window.blit(flag_img, flagrect)
-   print(godmode)
-   window.blit(text_title, text_title_rect)
-   window.blit(backbtn, back_rect)
-   window.blit(flag_icon, flag_rect)
-   flag_text = title_font.render(str(g.flags-g.flagcount), True, (0,0,0))
-   flag_text_rect = flag_text.get_rect(center=(300, 550))
-   window.blit(flag_text, flag_text_rect)
-   score = title_font.render(f"Score: {g.score}", True, (0,0,0))
-   score_rect = score.get_rect(topright = (760,25))
-   window.blit(score, score_rect)
-   window.blit(timer_img, timer_rect)
+   
    c= (0,0,0)
    if curr_time <= 10: 
        c = (251, 138, 138)
+   
+   
    timer_text = title_font.render(str(curr_time), True, c)
    time_text_rect = timer_text.get_rect(center=(550,550))
+   
+   flag_text = title_font.render(str(g.flags-g.flagcount), True, (0,0,0))
+   flag_text_rect = flag_text.get_rect(center=(300, 550))
+   
+   score = title_font.render(f"Score: {g.score}", True, (0,0,0))
+   score_rect = score.get_rect(topright = (760,25))
+   
+   
+   window.blit(text_title, text_title_rect)
+   window.blit(backbtn, back_rect)
+   window.blit(flag_icon, flag_rect)
+   window.blit(flag_text, flag_text_rect)
+   window.blit(score, score_rect)
+   window.blit(timer_img, timer_rect)
    window.blit(timer_text, time_text_rect)
-# def valid(x, y):
-#     if x < 0 or x > 13 or y < 0 or y > 7 or g.grid[y][x][1] > 0:
-#         return False
-#     return True    
 
 
-# def dfs(x, y):
-#     global total
-    
-#     vals = []
-#     stack = [(x, y)]
-#     while len(stack) > 0:
-#         curr = stack.pop()
-#         if valid(curr[0], curr[1]) == False or visited[curr[1]][curr[0]]:
-            
-#             continue
-#         print(visited)
-#         visited[curr[1]][curr[0]] = 1
 
-#         val = g.grid[curr[1]][curr[0]][1]
 
-#         if val == 0:
-#             vals.append(curr[1], curr[2])
+def writescores(x):
+    f = open('highscores.txt', "r+")
+    scores = f.readline().split(" ")
+    print(scores)
+    if scores == ['']:
+        f.write(str(x))
+        return
+    added = False
+    for i in range(len(scores)):
+        if x >= int(scores[i]):
+           scores.insert(i, str(x))
+           added = True
+           break
+    if not added:
+        scores.append(str(x))
+    f.close()
+    f = open('highscores.txt', "w")
+    out = " ".join(scores)
+    print(out)
+    f.write(out)
+    f.close()
 
-#         stack.append((curr[0]-1, curr[1]))
-#         stack.append((curr[0], curr[1]-1))
-#         stack.append((curr[0]+1, curr[1]))
-#         stack.append((curr[0], curr[1]+1))
 
-#     return vals
 def check_clicked(row, column):
     if not g.grid[column][row][0] and g.grid[column][row][1] != -1:
         g.score+=300
@@ -219,21 +232,26 @@ def check_clicked(row, column):
 
     if g.grid[column][row][1] == -1:
         g.GAME_STATUS = "LOSE"
+        if g.score > 0:
+            writescores(g.score)
         return 
-    # if g.grid[column][row][1] == 0:
-    #     y = dfs(column, row)
-    #     for i in range(len(y)):
-    #         g.grid[y[0]][y[1]][0] = True
-    #         g.score+=300
-
-
-
+   
+def checkwin():
+    for row in range(len(g.grid)):
+       for item in range(len(g.grid[row])):
+           if g.grid[row][item][0] != True and g.grid[row][item][1] >= 0:
+               return
+               
+    g.score*=g.DIFF_MULTIPLIER[g.DIFFICULTY]
+    writescores(g.score)
+    g.GAME_STATUS = "WIN"
 
 def run(window, clock:pygame.time.Clock):
     global curr_time
     if curr_time <= 0:
         g.GAME_STATUS = "LOSE"
     draw(window)
+    checkwin()
     keycheck()
     pygame.display.flip()
     clock.tick(60)  
