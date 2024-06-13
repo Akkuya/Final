@@ -22,17 +22,17 @@ def keycheck():
 
             if 338<= mouse_x <= 463 and 220 <= mouse_y <= 281:
                 print('1 pressed')
-                globals.DIFFICULTY = 'EASY'
+                globals.DIFFICULTY = 0
                 
             elif 338 <= mouse_x <= 463 and 320 <= mouse_y <= 381:
-                print('2 pressed')
+                
 
-                globals.DIFFICULTY = 'MEDIUM'
+                globals.DIFFICULTY = 1
 
             elif 338 <= mouse_x <= 463 and 420 <= mouse_y <= 481:
                 print('3 pressed')
 
-                globals.DIFFICULTY = 'HARD'
+                globals.DIFFICULTY = 2
                 
             elif back_rect.collidepoint((mouse_x, mouse_y)):
                 globals.GAME_STATUS = "MENU"
@@ -48,7 +48,7 @@ def run(window, clock):
 
     text_play = title_font.render("EASY", True, (138, 251, 149))
     text_play_rect = text_play.get_rect(center=(globals.WINDOW_WIDTH // 2, 250))
-    if globals.DIFFICULTY == "EASY":
+    if globals.DIFFICULTY == 0:
         x = (51, 45, 45)
     else:
         x = (146, 146, 146)
@@ -59,7 +59,7 @@ def run(window, clock):
 
     text_play = title_font.render("MEDIUM", True, (138, 170, 251))
     text_play_rect = text_play.get_rect(center=(globals.WINDOW_WIDTH // 2, 350))
-    if globals.DIFFICULTY == "MEDIUM":
+    if globals.DIFFICULTY == 1:
         x = (51, 45, 45)
     else:
         x = (146, 146, 146)
@@ -70,7 +70,7 @@ def run(window, clock):
 
     text_play = title_font.render("HARD", True, (251, 138, 138))
     text_play_rect = text_play.get_rect(center=(globals.WINDOW_WIDTH // 2, 450))
-    if globals.DIFFICULTY == "HARD":
+    if globals.DIFFICULTY == 2:
         x = (51, 45, 45)
     else:
         x = (146, 146, 146)

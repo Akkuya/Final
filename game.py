@@ -20,6 +20,11 @@ playable_area = pygame.Rect((50, 100, 700, 400))
 backbtn = pygame.transform.rotozoom(backbtn, 0, 0.05)
 back_rect = backbtn.get_rect(topleft = (5, 5))
 
+text_title = title_font.render(g.DIFF_NAME[g.DIFFICULTY], True, g.DIFF_COLOUR[g.DIFFICULTY])
+text_title_rect = text_title.get_rect(center=(g.WINDOW_WIDTH // 2, 50))
+
+
+
 def keycheck():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -39,6 +44,8 @@ def keycheck():
 
     
 def init():
+    global text_title
+    text_title = title_font.render(g.DIFF_NAME[g.DIFFICULTY], True, g.DIFF_COLOUR[g.DIFFICULTY])
     count = 0
     g.grid = []
     
@@ -77,8 +84,9 @@ def init():
 
     
         
-def draw(window, clock):
-   
+def draw(window):
+   global text_title
+   window.fill((217, 217, 217))
    for row in range(len(g.grid)):
        for item in range(len(g.grid[row])):
            if g.grid[row][item][0] == False:
@@ -87,34 +95,28 @@ def draw(window, clock):
                 color = (209, 250, 195)
                 
            pygame.draw.rect(window, color, (55 + (item*(g.width+g.spacing)), 105 + (row*(g.width+g.spacing)), g.width, g.width))
-           if g.grid[row][item][0] == True:
-                x= small_font.render(str(g.grid[row][item][1]), True, (0,0,0))
-                y = x.get_rect(topleft=((67 + (item*(g.width+g.spacing)), 107 + (row*(g.width+g.spacing)))))
-                window.blit(x, y)
+           
+           x= small_font.render(str(g.grid[row][item][1]), True, (0,0,0))
+           y = x.get_rect(topleft=((67 + (item*(g.width+g.spacing)), 107 + (row*(g.width+g.spacing)))))
+           window.blit(x, y)
+   
+   window.blit(text_title, text_title_rect)
+   window.blit(backbtn, back_rect)
 
+    
 
 def check_clicked(row, column):
     g.grid[column][row][0] = True
     if g.grid[column][row][1] == -1:
         g.GAME_STATUS = "LOSE"
+    else:
+        g.score+=300
+    
 
-    print(g.grid)
 
 def run(window, clock:pygame.time.Clock):
-    window.fill((217, 217, 217))
-
-    
-    draw(window, clock)
-    
-    
-    
-    
-    
-    window.blit(backbtn, back_rect)
-    text_title = title_font.render(g.DIFFICULTY, True, (0,0,0))
-    text_title_rect = text_title.get_rect(center=(g.WINDOW_WIDTH // 2, 50))
-    window.blit(text_title, text_title_rect)
+        
+    draw(window)
     keycheck()
     pygame.display.flip()
-    
     clock.tick(60)  

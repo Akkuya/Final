@@ -44,6 +44,7 @@ def run(window, clock):
     text_graphics = body.render("Graphics: Taqeef", True, (0, 0, 0))
     text_graphics_rect = text_graphics.get_rect(center=(globals.WINDOW_WIDTH // 2, 440))
     window.blit(text_graphics, text_graphics_rect)
+    
     text_sfx = body.render("SFX: Ayman", True, (0, 0, 0))
     text_sfx_rect = text_sfx.get_rect(center=(globals.WINDOW_WIDTH // 2, 560))
     window.blit(text_sfx, text_sfx_rect)
