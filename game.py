@@ -1,3 +1,12 @@
+# TODO
+# - ORGANIZE CODE
+# - MAKE WIN SCREEN
+# - DISPLAY SCORES ON RESUTLS SCREENS
+# - WRITE HIGH SCORES TO FILE?
+# - DFS IF USER CLICKS A TILE WITH A 0 ON IT
+
+
+
 import pygame
 from math import floor
 import random
@@ -149,7 +158,10 @@ def draw(window):
    score_rect = score.get_rect(topright = (760,25))
    window.blit(score, score_rect)
    window.blit(timer_img, timer_rect)
-   timer_text = title_font.render(str(curr_time), True, (0,0,0))
+   c= (0,0,0)
+   if curr_time <= 10: 
+       c = (251, 138, 138)
+   timer_text = title_font.render(str(curr_time), True, c)
    time_text_rect = timer_text.get_rect(center=(550,550))
    window.blit(timer_text, time_text_rect)
 
@@ -170,7 +182,9 @@ def check_clicked(row, column):
 
 
 def run(window, clock:pygame.time.Clock):
-        
+    global curr_time
+    if curr_time <= 0:
+        g.GAME_STATUS = "LOSE"
     draw(window)
     keycheck()
     pygame.display.flip()
