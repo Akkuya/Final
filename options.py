@@ -37,7 +37,7 @@ def keycheck():
             elif back_rect.collidepoint((mouse_x, mouse_y)):
                 globals.GAME_STATUS = "MENU"
             
-
+        
 
 def run(window, clock):
     window.fill((217, 217, 217))
