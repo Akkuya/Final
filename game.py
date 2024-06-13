@@ -20,7 +20,7 @@ font = pygame.font.Font("./assets/fonts/Inter.ttf", 15)
 title_font = pygame.font.Font("./assets/fonts/Inter.ttf", 40)
 body = pygame.font.Font("./assets/fonts/Inter.ttf", 65)
 small_font = pygame.font.Font("./assets/fonts/Inter.ttf", 30)
-
+visited = []
 flag_img = pygame.image.load('./assets/img/flag.png')
 flag_img = pygame.transform.rotozoom(flag_img, 0, 0.1)
 flag_icon = pygame.transform.rotozoom(flag_img, 0, 1.5)
@@ -29,7 +29,7 @@ curr_time = g.DIFF_TIMER[g.DIFFICULTY]
 timer_img = pygame.image.load('./assets/img/timer.png')
 timer_img = pygame.transform.rotozoom(timer_img, 0, 0.15)
 timer_rect = timer_img.get_rect(center=(450, 550))
-
+godmode = False
 playable_area = pygame.Rect((50, 100, 700, 400))
 
 backbtn = pygame.image.load('./assets/img/backbtn.png')
@@ -43,7 +43,7 @@ text_title_rect = text_title.get_rect(center=(g.WINDOW_WIDTH // 2, 50))
 
 
 def keycheck():
-    global curr_time
+    global curr_time, godmode
     for event in pygame.event.get():
         if event.type == pygame.USEREVENT:
             curr_time -= 1
@@ -61,20 +61,26 @@ def keycheck():
                 item = floor((mouse_pos[0] - 55)/50)
                 row = floor((mouse_pos[1] - 105)/50)
                 check_clicked(item, row)
-        elif event.type == pygame.MOUSEBUTTONUP and event.button == 3:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             mouse_pos = pygame.mouse.get_pos()
 
             if playable_area.collidepoint(mouse_pos):
                 item = floor((mouse_pos[0] - 55)/50)
                 row = floor((mouse_pos[1] - 105)/50)
                 flag(item, row)
-
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_g:
+            print('working')
+            if godmode == True:
+                godmode = False
+            else:
+                godmode = True
             
 
     
 def init():
-    global text_title, curr_time
+    global text_title, curr_time, godmode
     curr_time = g.DIFF_TIMER[g.DIFFICULTY]
+    godmode = False
     g.flagcount = 0
     g.score = 0
     text_title = title_font.render(g.DIFF_NAME[g.DIFFICULTY], True, g.DIFF_COLOUR[g.DIFFICULTY])
@@ -128,7 +134,7 @@ def flag(row, column):
     
         
 def draw(window):
-   global text_title, curr_time
+   global text_title, curr_time, godmode
    window.fill((217, 217, 217))
    for row in range(len(g.grid)):
        for item in range(len(g.grid[row])):
@@ -139,15 +145,22 @@ def draw(window):
                
                 
            pygame.draw.rect(window, color, (55 + (item*(g.width+g.spacing)), 105 + (row*(g.width+g.spacing)), g.width, g.width))
-           if g.grid[row][item][0] == True:
-                x= small_font.render(str(g.grid[row][item][1]), True, (0,0,0))
-                y = x.get_rect(topleft=((67 + (item*(g.width+g.spacing)), 107 + (row*(g.width+g.spacing)))))
-                window.blit(x, y)
+           if g.grid[row][item][0] == True and godmode == False:
+            x= small_font.render(str(g.grid[row][item][1]), True, (0,0,0))
+            y = x.get_rect(topleft=((67 + (item*(g.width+g.spacing)), 107 + (row*(g.width+g.spacing)))))
+            window.blit(x, y)
+
+
+           elif godmode == True:
+            x= small_font.render(str(g.grid[row][item][1]), True, (0,0,0))
+            y = x.get_rect(topleft=((67 + (item*(g.width+g.spacing)), 107 + (row*(g.width+g.spacing)))))
+            window.blit(x, y)
+           
            
            if g.grid[row][item][2]:
                flagrect = flag_img.get_rect(topleft=(60 + (item*(g.width+g.spacing)), 108 + (row*(g.width+g.spacing))))
                window.blit(flag_img, flagrect)
-   
+   print(godmode)
    window.blit(text_title, text_title_rect)
    window.blit(backbtn, back_rect)
    window.blit(flag_icon, flag_rect)
@@ -164,7 +177,36 @@ def draw(window):
    timer_text = title_font.render(str(curr_time), True, c)
    time_text_rect = timer_text.get_rect(center=(550,550))
    window.blit(timer_text, time_text_rect)
+# def valid(x, y):
+#     if x < 0 or x > 13 or y < 0 or y > 7 or g.grid[y][x][1] > 0:
+#         return False
+#     return True    
 
+
+# def dfs(x, y):
+#     global total
+    
+#     vals = []
+#     stack = [(x, y)]
+#     while len(stack) > 0:
+#         curr = stack.pop()
+#         if valid(curr[0], curr[1]) == False or visited[curr[1]][curr[0]]:
+            
+#             continue
+#         print(visited)
+#         visited[curr[1]][curr[0]] = 1
+
+#         val = g.grid[curr[1]][curr[0]][1]
+
+#         if val == 0:
+#             vals.append(curr[1], curr[2])
+
+#         stack.append((curr[0]-1, curr[1]))
+#         stack.append((curr[0], curr[1]-1))
+#         stack.append((curr[0]+1, curr[1]))
+#         stack.append((curr[0], curr[1]+1))
+
+#     return vals
 def check_clicked(row, column):
     if not g.grid[column][row][0] and g.grid[column][row][1] != -1:
         g.score+=300
@@ -177,8 +219,14 @@ def check_clicked(row, column):
 
     if g.grid[column][row][1] == -1:
         g.GAME_STATUS = "LOSE"
-        return   
-    
+        return 
+    # if g.grid[column][row][1] == 0:
+    #     y = dfs(column, row)
+    #     for i in range(len(y)):
+    #         g.grid[y[0]][y[1]][0] = True
+    #         g.score+=300
+
+
 
 
 def run(window, clock:pygame.time.Clock):
